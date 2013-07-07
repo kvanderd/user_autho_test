@@ -13,16 +13,17 @@ get '/sessions/new' do
   erb :sign_in
 end
 
+
 post '/sessions' do
-   @user = User.find_by_email(params[:email])
-  if @user 
-    User.authenticate(@user.email, @user.password)
-    session[:user] = @user.id
-    redirect '/'
-  else
-    @error = "please check email/password"
-    erb :sign_in
-  end
+	puts params
+  user = User.authenticate(params[:email], params[:password])
+    if user
+      session[:user] = user
+      redirect "/"
+    else # login incorrect
+      @error = "login failed please check email/password"
+      erb :sign_in
+    end
 end
 
 delete '/sessions/:id' do
